@@ -1,0 +1,19 @@
+from snakemake.utils import min_version
+
+min_version("8.19.1")
+
+configfile: "config/config.yaml"
+
+GEN_COR = [0.5, 0.75, 1]
+HSQ = [0.2, 0.6]
+N_CAUS = [50, 200]
+REP = range(1, 11)
+
+include: "rules/preprocessing.smk"
+include: "rules/pgs.smk"
+
+rule all:
+  input:
+    expand("model/result_{HSQ}_{GEN_COR}_{N_CAUS}_rep{REP}.txt", HSQ=HSQ, GEN_COR=GEN_COR, N_CAUS=N_CAUS, REP=REP),
+    expand("score/score_{HSQ}_{GEN_COR}_{N_CAUS}_rep{REP}.txt", HSQ=HSQ, GEN_COR=GEN_COR, N_CAUS=N_CAUS, REP=REP)
+
